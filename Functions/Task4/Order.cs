@@ -10,22 +10,45 @@ namespace Functions.Task4
 
         public double GetPriceOfAvailableProducts()
         {
-            IEnumerator<IProduct> enumerator = Products.ToList().GetEnumerator();
-            while (enumerator.MoveNext())
+            CleanNotAvailableProducts();
+            return CalculateOrderPrice();
+        }
+
+        private double CalculateOrderPrice()
+        {
+            var orderPrice = 0.0;
+            
+            foreach (var product in Products)
             {
-                IProduct p1 = enumerator.Current;
-                if (!p1.IsAvailable())
-                {
-                    Products.Remove(p1);
-                }
+                orderPrice += product.GetProductPrice();
             }
 
-            var orderPrice = 0.0;
-            foreach (IProduct p in Products)
-            {
-                orderPrice += p.GetProductPrice();
-            }
             return orderPrice;
+        }
+
+        private void CleanNotAvailableProducts()
+        {
+            IEnumerator<IProduct> enumerator = Products.ToList().GetEnumerator();
+            
+            while (enumerator.MoveNext())
+            {
+                RemoveProduct(enumerator);
+            }
+        }
+
+        private void RemoveProduct(IEnumerator<IProduct> enumerator)
+        {
+            var currentProduct = enumerator.Current;
+                
+            if (IsNotAvailableProduct(currentProduct))
+            {
+                Products.Remove(currentProduct);
+            }
+        }
+
+        private bool IsNotAvailableProduct(IProduct product)
+        {
+            return product != null && !product.IsAvailable();
         }
     }
 }
