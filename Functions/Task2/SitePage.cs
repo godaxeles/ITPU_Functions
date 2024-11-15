@@ -20,13 +20,19 @@ namespace Functions.Task2
 
         public string GetEditablePageUrl(IDictionary<string, string> parameters)
         {
+            return Http + Domain + Editable + ConvertParamsDictionaryToString(parameters) + GetAttributes();
+        }
+
+        private StringBuilder ConvertParamsDictionaryToString(IDictionary<string, string> parameters)
+        {
             var paramsString = new StringBuilder();
+            
             foreach (var parameter in parameters)
             {
                 paramsString.Append($"&{parameter.Key}={parameter.Value}");
             }
 
-            return Http + Domain + Editable + paramsString + GetAttributes();
+            return paramsString;
         }
 
         private string GetAttributes()
