@@ -4,17 +4,16 @@ namespace Functions.Task3
 {
     public abstract class UserController : IController
     {
-        private readonly UserAuthenticator userAuthenticator;
+        private readonly UserService _userService;
 
-        protected UserController(UserAuthenticator userAuthenticator)
+        protected UserController(UserService userService)
         {
-            this.userAuthenticator = userAuthenticator;
+            _userService = userService;
         }
 
-        public void AuthenticateUser(string userName, string password)
+        public void Authenticate(string userName, string password)
         {
-            IUser user = userAuthenticator.Login(userName, password);
-            if (user == null)
+            if (_userService.TryLogin(userName, password))
             {
                 GenerateFailLoginResponse();
             }
